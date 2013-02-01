@@ -1,0 +1,49 @@
+#!/bin/bash
+#
+# This is a simple wrapper for shineenc, which provides
+# the same command line options as LAME (at least the ones
+# that Squeezebox Server actually uses) and calls
+# shineenc instead.
+#
+# Note that most options are just ignored since shineenc is
+# very limited and does not support them.
+#
+# To install, just put this file and shineenc into the
+# Bin/arm-linux directory of your Squeezebox Server
+# installation.
+#
+# This file should be named "lame" and it must be
+# executable!
+#
+# Author: Mika Fischer <mika.fischer@zoopnet.de>
+# License: Public Domain
+#
+# History:
+#  2011-01-12: Initial release
+
+cmd=${0/lame/shineenc}
+
+while true; do
+    # Quiet parameter
+    if [[ $1 == "--silent" ]]; then
+        cmd="$cmd -q"
+        shift; continue
+    fi
+
+    # Bitrate parameter
+    if [[ $1 == "-B" ]]; then
+        cmd="$cmd -b $2"
+        shift; shift; continue
+    fi
+
+    # Ignore all other parameters that SBS uses
+    if [[ $1 == "-v" ]] || [[ $1 == "-r" ]] || [[ $1 == "--big-endian" ]]; then
+        shift; continue
+    fi
+    if [[ $1 == "-q" ]] || [[ $1 == "-s" ]] || [[ $1 == "--resample" ]]; then
+        shift; shift; continue
+    fi
+    break
+done
+
+exec $cmd "$@"
