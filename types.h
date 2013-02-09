@@ -94,6 +94,8 @@ typedef struct {
     int  (*write_mp3)(long bytes, void *buffer, void *config_in); 
     
     void *user; /* For the calling app's convenience */
+
+    int raw;
     
 } config_t;
 

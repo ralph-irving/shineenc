@@ -55,12 +55,23 @@ void error(char *s)
  * print_usage:
  * ------------
  */
+static void print_version()
+{
+  fprintf(stderr, "shineenc v1.01r208 2013-02-09\n");
+}
+
+/*
+ * print_usage:
+ * ------------
+ */
 static void print_usage()
 {
-  fprintf(stderr, "USAGE   :  shineenc [options] <infile> <outfile>\n");
+  print_version();
+  fprintf(stderr, "\nUSAGE   :  shineenc [options] <infile> <outfile>\n");
   fprintf(stderr, "options : -h            this help message\n");
   fprintf(stderr, "          -b <bitrate>  set the bitrate [32-320], default 128kbit\n");
   fprintf(stderr, "          -c            set copyright flag, default off\n");
+  fprintf(stderr, "          -r            expect raw 44100/16 stereo signed pcm, default off\n");
   fprintf(stderr, "          -q            don't print anything on screen\n");
   fprintf(stderr, "\n");
   fprintf(stderr, "<infile> and/or <outfile> can be \"-\", which means stdin/stdout.\n");
@@ -77,6 +88,7 @@ static void set_defaults(config_t *config)
     
     /* Could set overrides here, if any - see Layer3.c */
   config->quiet = 0;
+  config->raw = 0;
 }
 
 /*
@@ -105,6 +117,10 @@ static bool parse_command(int argc, char** argv, config_t *config)
       
       case 'q':
         config->quiet = 1;
+        break;
+        
+      case 'r':
+        config->raw = 1;
         break;
         
       case 'h':
@@ -160,9 +176,6 @@ int main(int argc, char **argv)
 
   time(&config.start_time);
   
-  if (!config.quiet)
-    fprintf(stderr, "shineenc v1.01 2007-01-02\n");
-
   /* Set the default MPEG encoding paramters - basically init the struct */
   set_defaults(&config);
     
@@ -171,6 +184,9 @@ int main(int argc, char **argv)
     print_usage();
     exit(1);
   }
+
+  if (!config.quiet)
+    print_version();
 
   /* Open the input file and fill the config wave_t header */
   wave_open(&config);
