@@ -57,7 +57,7 @@ void error(char *s)
  */
 static void print_version()
 {
-  fprintf(stderr, "shineenc v1.01r208 2013-02-09\n");
+  fprintf(stderr, "shineenc v1.01r251 2013-07-05\n");
 }
 
 /*
@@ -71,7 +71,7 @@ static void print_usage()
   fprintf(stderr, "options : -h            this help message\n");
   fprintf(stderr, "          -b <bitrate>  set the bitrate [32-320], default 128kbit\n");
   fprintf(stderr, "          -c            set copyright flag, default off\n");
-  fprintf(stderr, "          -r            expect raw 44100/16 stereo signed pcm, default off\n");
+  fprintf(stderr, "          -r <srate>    expect raw <srate>, 16 bit stereo signed pcm, default off\n");
   fprintf(stderr, "          -q            don't print anything on screen\n");
   fprintf(stderr, "\n");
   fprintf(stderr, "<infile> and/or <outfile> can be \"-\", which means stdin/stdout.\n");
@@ -120,7 +120,9 @@ static bool parse_command(int argc, char** argv, config_t *config)
         break;
         
       case 'r':
-        config->raw = 1;
+        config->raw = atoi(argv[++i]);
+	if ((config->raw < 0) || (config->raw > 48000))
+		config->raw = 44100;
         break;
         
       case 'h':

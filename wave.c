@@ -78,7 +78,7 @@ void wave_open(config_t *config)
   {
     header.channels = 2;
     header.bit_samp = 16;
-    header.samp_rate = 44100;
+    header.samp_rate = config->raw;
     header.length = 0;
     header.byte_samp = (header.channels * header.bit_samp);
     header.byte_rate = (header.samp_rate * header.byte_samp);

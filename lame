@@ -36,11 +36,17 @@ while true; do
         shift; shift; continue
     fi
 
+    # samplerate parameter
+    if [[ $1 == "-s" ]]; then
+        cmd="$cmd -r $2"
+        shift; shift; continue
+    fi
+
     # Ignore all other parameters that SBS uses
     if [[ $1 == "-v" ]] || [[ $1 == "-r" ]] || [[ $1 == "--big-endian" ]]; then
         shift; continue
     fi
-    if [[ $1 == "-q" ]] || [[ $1 == "-s" ]] || [[ $1 == "--resample" ]]; then
+    if [[ $1 == "-q" ]] || [[ $1 == "--resample" ]]; then
         shift; shift; continue
     fi
     break
